@@ -59,14 +59,18 @@ export const fetchWeather = async (
   };
 
   if (cityName) {
-    const { supabase } = await import('../lib/supabase');
-    await supabase.from('weather_logs').insert({
-      city: cityName,
-      country: countryName ?? '',
-      temperature: weatherData.temperature,
-      description: weatherData.description,
-      fetched_at: new Date().toISOString(),
-    });
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    if (supabaseUrl?.trim() && supabaseAnonKey?.trim()) {
+      const { supabase } = await import('../lib/supabase');
+      await supabase.from('weather_logs').insert({
+        city: cityName,
+        country: countryName ?? '',
+        temperature: weatherData.temperature,
+        description: weatherData.description,
+        fetched_at: new Date().toISOString(),
+      });
+    }
   }
 
   return weatherData;
