@@ -58,6 +58,8 @@ function App() {
       </div>
 
       <button
+        type="button"
+        data-testid="weather-refresh-button"
         onClick={loadRandomCityWeather}
         disabled={loading}
         className="mb-8 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 disabled:from-slate-600 disabled:to-slate-700 text-white font-semibold py-4 px-8 rounded-xl shadow-lg transition-all transform hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed flex items-center gap-3 text-lg"

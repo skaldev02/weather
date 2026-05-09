@@ -63,13 +63,35 @@ export const fetchWeather = async (
     const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
     if (supabaseUrl?.trim() && supabaseAnonKey?.trim()) {
       const { supabase } = await import('../lib/supabase');
-      await supabase.from('weather_logs').insert({
+      const row = {
         city: cityName,
         country: countryName ?? '',
         temperature: weatherData.temperature,
         description: weatherData.description,
         fetched_at: new Date().toISOString(),
+      };
+      console.info('[weather] DB insert start', {
+        table: 'weather_logs',
+        city: row.city,
+        country: row.country,
+        temperature: row.temperature,
+        fetched_at: row.fetched_at,
       });
+      const { error } = await supabase.from('weather_logs').insert(row);
+      if (error) {
+        console.error('[weather] DB insert failed', {
+          message: error.message,
+          code: error.code,
+          details: error.details,
+          hint: error.hint,
+        });
+      } else {
+        console.info('[weather] DB insert OK', { city: row.city, country: row.country });
+      }
+    } else {
+      console.warn(
+        '[weather] DB insert skipped — set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY',
+      );
     }
   }
 
